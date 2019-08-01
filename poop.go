@@ -28,7 +28,8 @@ func serialRead(device string) {
 	c := &serial.Config{Name: device, Baud: 9600}
 	s, err := serial.OpenPort(c)
 	if err != nil {
-		log.Fatal(err)
+		lastPoop = -1
+		return
 	}
 	defer s.Close()
 
@@ -65,6 +66,11 @@ func writeTimestamp(fileName, text string) {
 }
 
 func gotPoop(w http.ResponseWriter, r *http.Request) {
+	if lastPoop == -1 {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
 	if "cani/last" == r.URL.Path[1:] {
 		fmt.Fprintf(w, "Last Poop was %d seconds ago", time.Now().Unix()-lastPoop)
 		return
