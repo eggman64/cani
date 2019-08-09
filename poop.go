@@ -114,6 +114,12 @@ const htmlTmpl = `
 	<meta property="og:description" content="{{.Decision}}" />
 	<meta property="og:image" content="{{.ImgSrc}}" />
 </head>
+<script>
+// reload every 5 seconds
+setTimeout(function(){
+   window.location.reload(1);
+}, 5000);
+</script>
 <body>
 	<img src='{{.ImgSrc}}' />
 </body>
