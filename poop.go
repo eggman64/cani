@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/tarm/serial"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -65,6 +66,21 @@ func writeTimestamp(fileName, text string) {
 	}
 }
 
+func readLogs(fileName string) string {
+	f, err := os.OpenFile(fileName, os.O_RDONLY, 0)
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	logs, err := ioutil.ReadFile("poop.log")
+	if err != nil {
+		panic(err)
+	}
+	return string(logs)
+}
+
 func gotPoop(w http.ResponseWriter, r *http.Request) {
 	if lastPoop == -1 {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
@@ -73,6 +89,11 @@ func gotPoop(w http.ResponseWriter, r *http.Request) {
 
 	if "cani/last" == r.URL.Path[1:] {
 		fmt.Fprintf(w, "Last Poop was %d seconds ago", time.Now().Unix()-lastPoop)
+		return
+	}
+
+	if "cani/logs" == r.URL.Path[1:] {
+		fmt.Fprintf(w, "%s", readLogs("poop.log"))
 		return
 	}
 
