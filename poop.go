@@ -13,6 +13,8 @@ import (
 
 const longPoop = int64(10)
 
+var logFile = getEnv("LOG_FILE", "poop.log")
+
 var lastPoop int64
 
 func main() {
@@ -74,7 +76,7 @@ func readLogs(fileName string) string {
 
 	defer f.Close()
 
-	logs, err := ioutil.ReadFile("poop.log")
+	logs, err := ioutil.ReadFile(logFile)
 	if err != nil {
 		panic(err)
 	}
@@ -93,7 +95,7 @@ func gotPoop(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if "cani/logs" == r.URL.Path[1:] {
-		fmt.Fprintf(w, "%s", readLogs("poop.log"))
+		fmt.Fprintf(w, "%s", readLogs(logFile))
 		return
 	}
 
