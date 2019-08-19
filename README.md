@@ -19,4 +19,6 @@ Also see `/last` for time since last use for better air quality information.
 
 `/cani/` availability of with time in seconds since last use (if code is `200`)
 
+`/cani/logs` returns the poop.log
+
 `/cani/*` where * is _any_ string
